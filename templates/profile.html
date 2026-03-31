@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - LocalBridge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="/static/css/main.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/premium-ui.css" rel="stylesheet">
+</head>
+<body class="mesh-bg">
+
+    <div class="dashboard-layout">
+        <!-- Premium Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <!-- Injected by sidebar.js -->
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <!-- Injected by sidebar.js -->
+            </nav>
+
+            <div style="padding: 1.5rem 1rem;">
+                <button class="nav-item w-full sidebar-logout text-red-400 hover:text-red-300 hover:bg-red-500/10 justify-start border-none">
+                    <!-- Injected by sidebar.js -->
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-navbar">
+                <button class="md:hidden icon-btn" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </header>
+
+            <div class="content-area pt-8">
+                <div class="max-w-4xl mx-auto">
+                    
+                    <div class="mb-8 reveal-fade flex justify-between items-center text-center md:text-left">
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight lg:text-4xl">Account Profile</h1>
+                            <p class="text-slate-500 mt-2 text-lg">Manage your public persona and preferences.</p>
+                        </div>
+                        <button onclick="toggleSettingsModal()" class="icon-btn p-3 bg-white rounded-full shadow-sm hover:shadow-md transition-all hover:bg-slate-50 group">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-600 group-hover:rotate-45 transition-transform"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1.01 1.74l-.38.22a2 2 0 0 1-2 0l-.16-.09a2 2 0 0 0-2.72.73l-.22.38a2 2 0 0 0 .73 2.72l.16.1a2 2 0 0 1 1 1.72v.47a2 2 0 0 1-1 1.72l-.16.1a2 2 0 0 0-.73 2.72l.22.38a2 2 0 0 0 2.72.73l.16-.09a2 2 0 0 1 2 0l.38.22a2 2 0 0 1 1.01 1.74v.18a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1.01-1.74l.38-.22a2 2 0 0 1 2 0l.16.09a2 2 0 0 0 2.72-.73l.22-.38a2 2 0 0 0-.73-2.72l-.16-.1a2 2 0 0 1-1-1.72v-.47a2 2 0 0 1 1-1.72l.16-.1a2 2 0 0 0 .73-2.72l-.22-.38a2 2 0 0 0-2.72-.73l-.16.09a2 2 0 0 1-2 0l-.38-.22a2 2 0 0 1-1.01-1.74V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Profile Card -->
+                        <div class="col-span-1 reveal-scale">
+                            <div class="premium-glass rounded-3xl p-6 text-center border-t-4 border-t-indigo-500 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-50 z-0"></div>
+                                <div class="relative z-10">
+                                    <div class="relative w-32 h-32 mx-auto mb-6 group cursor-pointer">
+                                        <img src="" onerror="this.src='https://ui-avatars.com/api/?name=User'" id="profileImg" class="w-32 h-32 rounded-full object-cover shadow-xl border-4 border-white transition-transform group-hover:scale-105">
+                                        <div class="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white" onclick="document.getElementById('profile_image').click()">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                        </div>
+                                    </div>
+                                    
+                                    <h2 class="text-2xl font-bold tracking-tight text-slate-900" id="profName"></h2>
+                                    <p class="text-slate-500 mb-6 font-medium" id="profEmail"></p>
+                                    
+                                    <div class="grid grid-cols-3 gap-4 border-t border-slate-200 pt-6">
+                                        <div>
+                                            <div class="text-2xl font-bold text-slate-900" id="profItems">0</div>
+                                            <div class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Posted</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl font-bold text-indigo-600" id="profRating">0.0</div>
+                                            <div class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Rating</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl font-bold text-pink-600" id="profTrust">50</div>
+                                            <div class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Trust Score</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Edit Form -->
+                        <div class="col-span-1 lg:col-span-2 reveal-up" style="animation-delay: 0.2s">
+                            <div class="premium-glass rounded-3xl p-6">
+                                <h3 class="text-lg font-bold text-slate-900 mb-6">Personal Information</h3>
+                                <form id="profile-form" enctype="multipart/form-data">
+                                    <input type="file" id="profile_image" name="image" class="hidden" accept="image/*" onchange="previewAvatar(event)">
+                                    <input type="hidden" name="email" id="emailInput">
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div class="floating-group">
+                                            <input type="text" id="name" name="name" class="floating-input" placeholder=" " required>
+                                            <label class="floating-label">Full Name</label>
+                                        </div>
+                                        <div class="floating-group">
+                                            <input type="text" id="phone" name="phone" class="floating-input" placeholder=" ">
+                                            <label class="floating-label">Phone Label</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div class="floating-group">
+                                            <input type="text" id="location" name="location" class="floating-input" placeholder=" " required>
+                                            <label class="floating-label">City, State</label>
+                                        </div>
+                                        <div class="floating-group">
+                                            <select id="preferred_exchange" name="preferred_exchange" class="floating-input">
+                                                <option value="Meetup">Public Meetup</option>
+                                                <option value="Delivery">Local Delivery</option>
+                                                <option value="Pickup">Porch Pickup</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="floating-group mb-6">
+                                        <textarea id="bio" name="bio" rows="4" class="floating-input resize-none p-4" placeholder=" "></textarea>
+                                        <label class="floating-label">Short Bio (Introduce yourself)</label>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button type="submit" id="saveBtn" class="btn-premium btn-premium-indigo py-3 px-8 text-lg font-bold text-white">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+
+
+                            
+                            <!-- My Listings Section -->
+                            <div class="premium-glass rounded-3xl p-6 mt-6 reveal-up" style="animation-delay: 0.4s">
+                                <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                    My Listings
+                                </h3>
+                                <div id="my-listings-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto custom-scrollbar pr-2">
+                                    <div class="col-span-full py-8 text-center text-slate-500 font-medium animate-pulse">Loading listings...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+
+<!-- Settings Modal Wrapper -->
+<div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+    <div class="bg-white rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        <!-- Header -->
+        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div>
+                <h3 class="text-2xl font-black text-slate-900 tracking-tight">Settings</h3>
+                <p class="text-slate-500 text-sm font-medium">Manage preferences & support</p>
+            </div>
+            <button onclick="toggleSettingsModal()" class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        
+        <!-- Scrollable Content -->
+        <div class="overflow-y-auto p-8 space-y-8 custom-scrollbar">
+            
+            <!-- SECTION: ACCOUNT -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Account</h4>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-5 0v1a3 3 0 0 1-6 0v-1"/></svg></div>
+                            <span class="font-bold text-slate-700">Notifications</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+                            <span class="font-bold text-slate-700">Location Services</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: SUPPORT & FAQ -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Support & FAQ</h4>
+                <div class="space-y-3">
+                    <!-- FAQ Items -->
+                    <div class="border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                        <button onclick="toggleFaq('faq1')" class="w-full flex items-center justify-between p-4 bg-white hover:bg-slate-50 transition-colors text-left">
+                            <span class="font-bold text-slate-700 text-sm">How do I list an item?</span>
+                            <svg id="faq1-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-400 transition-transform"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div id="faq1" class="hidden p-4 bg-slate-50/50 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
+                            Simply click 'Post Item' in the sidebar or from your profile. Upload up to 5 photos, describe your item, and set its condition.
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                        <button onclick="toggleFaq('faq2')" class="w-full flex items-center justify-between p-4 bg-white hover:bg-slate-50 transition-colors text-left">
+                            <span class="font-bold text-slate-700 text-sm">How do I complete a trade?</span>
+                            <svg id="faq2-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-400 transition-transform"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div id="faq2" class="hidden p-4 bg-slate-50/50 text-slate-600 text-sm leading-relaxed border-t border-slate-100">
+                            When meeting the partner, generate a handover code. The partner receives the code via email, providing it to you to confirm the exchange.
+                        </div>
+                    </div>
+
+                    <a href="mailto:localbridgeofficial@gmail.com" class="flex items-center justify-between p-4 bg-indigo-50/50 border border-indigo-100 rounded-2xl group hover:bg-indigo-50 transition-colors mt-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
+                            <div>
+                                <div class="font-bold text-indigo-900 text-sm">Contact Support</div>
+                                <div class="text-[10px] text-indigo-500 font-bold uppercase tracking-wider">localbridgeofficial@gmail.com</div>
+                            </div>
+                        </div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-indigo-400 group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECTION: LEGAL & ACCOUNT -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Legal & Account</h4>
+                <div class="space-y-3">
+                    <button onclick="window.location.href='/privacy'" class="w-full flex items-center justify-between p-4 bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Privacy Policy
+                        </div>
+                    </button>
+                    <button onclick="AppState.logout()" class="w-full flex items-center justify-between p-4 bg-orange-50 text-orange-600 font-bold rounded-2xl border border-orange-100 hover:bg-orange-100 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                            Log Out
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION: SECURITY -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Security</h4>
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <form id="password-form" onsubmit="updateUserPassword(event)">
+                        <div class="space-y-4">
+                            <div class="floating-group relative">
+                                <input type="password" id="old_password" name="old_password" class="floating-input !bg-transparent pr-12" placeholder=" " required>
+                                <label class="floating-label">Current Password</label>
+                                <button type="button" onclick="togglePasswordVisibility(this, 'old_password')" class="absolute top-1/2 -translate-y-1/2 right-3 p-2 hover:bg-slate-100 rounded-lg transition-colors z-10">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="floating-group relative">
+                                <input type="password" id="new_password" name="new_password" class="floating-input !bg-transparent pr-12" placeholder=" " required minlength="8">
+                                <label class="floating-label">New Password</label>
+                                <button type="button" onclick="togglePasswordVisibility(this, 'new_password')" class="absolute top-1/2 -translate-y-1/2 right-3 p-2 hover:bg-slate-100 rounded-lg transition-colors z-10">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                            <button type="submit" id="passBtn" class="w-full btn-premium btn-premium-indigo py-3 font-bold text-white text-sm">Update Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SECTION: DANGER ZONE -->
+            <div>
+                <h4 class="text-xs font-bold text-red-400 uppercase tracking-widest mb-4 mt-6">Danger Zone</h4>
+                <button onclick="showToast('Delete account requested. Our team will contact you.', 'info')" class="w-full flex items-center gap-3 p-4 bg-red-50 text-red-600 font-bold rounded-2xl border border-red-100 hover:bg-red-100 transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Delete Account Permanently
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="p-6 bg-slate-50 text-center border-t border-slate-100">
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">LocalBridge AI™ Premium v1.0.2</p>
+        </div>
+    </div>
+</div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/animations.js"></script>
+    <script src="/static/js/sidebar.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const user = AppState.getUser();
+            if(!user) return AppState.requireAuth();
+
+            document.getElementById('emailInput').value = user.email;
+            
+            try {
+                const res = await fetch(`/user-details?email=${user.email}`);
+                const data = await res.json();
+                
+                if(!data.error) {
+                    // Populate UI
+                    document.getElementById('profName').innerText = data.name;
+                    document.getElementById('profEmail').innerText = data.email;
+                    document.getElementById('profItems').innerText = data.posted;
+                    document.getElementById('profRating').innerText = data.rating;
+                    document.getElementById('profTrust').innerText = data.trust;
+                    if(data.profile_image) document.getElementById('profileImg').src = `/static/uploads/${data.profile_image}`;
+                    
+                    // Populate form fields properly triggering floating label placeholder logic
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('location').value = data.location;
+                    if(data.preferred_exchange) document.getElementById('preferred_exchange').value = data.preferred_exchange;
+                    document.getElementById('bio').value = data.bio || '';
+                    
+                    // Fetch My Listings
+                    loadMyListings(user.email);
+                }
+            } catch { showToast('Error loading profile', 'error'); }
+        });
+
+        async function loadMyListings(email) {
+            try {
+                const res = await fetch(`/my-products?user_name=${encodeURIComponent(email)}`);
+                const products = await res.json();
+                const grid = document.getElementById('my-listings-grid');
+                if (!products || products.length === 0) {
+                    grid.innerHTML = "<div class='col-span-full py-8 text-center text-slate-500 font-medium bg-slate-50 rounded-xl border border-dashed border-slate-200'>You haven't posted any items yet.</div>";
+                    return;
+                }
+                
+                grid.innerHTML = products.map(p => `
+                    <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm flex flex-col group hover:shadow-md transition-shadow relative">
+                        <img src="/static/uploads/${p.image_name}" alt="${p.name}" class="w-full h-32 object-cover" onerror="this.src='https://placehold.co/400x300/e2e8f0/64748b?text=Image+Not+Found'">
+                        <div class="p-4 flex-1 flex flex-col">
+                            <h4 class="font-bold text-slate-800 text-sm mb-1 line-clamp-1">${p.name}</h4>
+                            <p class="text-xs text-slate-500 mb-3">${p.category}</p>
+                            <button onclick="deleteProduct(${p.id})" class="mt-auto flex items-center justify-center gap-2 w-full py-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs rounded-lg transition-colors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                Delete Listing
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('my-listings-grid').innerHTML = '<div class="col-span-full py-4 text-center text-red-500">Failed to load listings.</div>';
+            }
+        }
+
+        async function deleteProduct(pid) {
+            if(!confirm("Are you sure you want to delete this listing?")) return;
+            try {
+                const res = await fetch('/delete-product', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: pid })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    showToast('Listing deleted successfully', 'success');
+                    const user = AppState.getUser();
+                    if(user) loadMyListings(user.email);
+                } else {
+                    showToast(data.message || 'Failed to delete listing', 'error');
+                }
+            } catch (err) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        function previewAvatar(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const img = document.getElementById('profileImg');
+                img.src = reader.result;
+                gsap.from(img, { scale: 0.5, opacity: 0, duration: 0.5, ease: "back.out(2)" });
+            };
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('saveBtn');
+            btn.innerHTML = 'Saving...';
+            try {
+                const res = await fetch('/update-profile', { method: 'POST', body: new FormData(e.target) });
+                const data = await res.json();
+                if(data.success) {
+                    showToast('Profile updated!', 'success');
+                    
+                    // Feedback animation
+                    gsap.to(btn, { scale: 1.05, duration: 0.1, yoyo: true, repeat: 1 });
+                    
+                    setTimeout(() => window.location.reload(), 800);
+                } else showToast(data.message, 'error');
+            } catch { showToast('Error updating', 'error'); }
+            finally { btn.innerHTML = 'Save Changes'; }
+        });
+
+        async function updateUserPassword(e) {
+            e.preventDefault();
+            const btn = document.getElementById('passBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Updating...';
+            
+            const user = AppState.getUser();
+            const oldPass = document.getElementById('old_password').value;
+            const newPass = document.getElementById('new_password').value;
+
+            // Password constraints validation
+            const hasCapital = /[A-Z]/.test(newPass);
+            const hasSmall = /[a-z]/.test(newPass);
+            const hasNumber = /\d/.test(newPass);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPass);
+            
+            if (newPass.length < 8 || !hasCapital || !hasSmall || !hasNumber || !hasSpecial) {
+                showToast('New password must be at least 8 characters and contain 1 capital, 1 small letter, 1 number, and 1 special character.', 'error');
+                btn.innerHTML = originalText;
+                return;
+            }
+
+            try {
+                const res = await fetch('/update-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
+                        old_password: oldPass,
+                        new_password: newPass
+                    })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    showToast('Password updated successfully!', 'success');
+                    e.target.reset();
+                } else {
+                    showToast(data.message || 'Failed to update password', 'error');
+                }
+            } catch {
+                showToast('Network error', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // --- Settings Modal Logic ---
+        function toggleSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                gsap.from("#settingsModal > div", { 
+                    y: 50, 
+                    opacity: 0, 
+                    scale: 0.95, 
+                    duration: 0.5, 
+                    ease: "power4.out" 
+                });
+            } else {
+                gsap.to("#settingsModal > div", { 
+                    y: 30, 
+                    opacity: 0, 
+                    scale: 0.98, 
+                    duration: 0.3, 
+                    ease: "power3.in",
+                    onComplete: () => modal.classList.add('hidden')
+                });
+            }
+        }
+
+        function toggleFaq(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById(id + '-icon');
+            const isHidden = el.classList.contains('hidden');
+            
+            // Close all others first
+            document.querySelectorAll('[id^="faq"]').forEach(item => {
+                if(item.id !== id && !item.id.includes('-icon')) {
+                    item.classList.add('hidden');
+                    const otherIcon = document.getElementById(item.id + '-icon');
+                    if(otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            if (isHidden) {
+                el.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+                gsap.from(el, { height: 0, opacity: 0, duration: 0.3, ease: "power2.out" });
+            } else {
+                el.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+</body>
+</html>
