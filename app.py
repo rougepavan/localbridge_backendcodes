@@ -20,7 +20,7 @@ except Exception as e:
     print(f"AI MODEL ERROR: {e}")
     predict_all = None
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='d:/web/templates', static_folder='d:/web/static')
 CORS(app)
 
 # --- DATABASE CONFIGURATION ---
@@ -33,7 +33,7 @@ DB_CONFIG = {
 
 # Use Absolute Path to prevent fetching errors
 # UPLOAD_FOLDER is shared between web and mobile backends
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+UPLOAD_FOLDER = 'd:/web/static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 

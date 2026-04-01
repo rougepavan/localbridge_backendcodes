@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
+app = Flask(__name__, template_folder='d:/web/templates', static_folder='d:/web/static')
 CORS(app)
 
 # --- DATABASE CONFIGURATION ---
@@ -25,7 +25,7 @@ DB_CONFIG = {
     
 # Use Absolute Path to prevent fetching errors
 # UPLOAD_FOLDER is shared between web and mobile backends
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+UPLOAD_FOLDER = 'd:/web/static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -321,6 +321,22 @@ def init_db():
                     related_id  INT,
                     is_read     BOOLEAN DEFAULT FALSE,
                     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+        # USER LOCATIONS (For Home Sidebar/Modal)
+        cursor.execute("SHOW TABLES LIKE 'user_locations'")
+        if not cursor.fetchone():
+            cursor.execute("""
+                CREATE TABLE user_locations (
+                    id          INT AUTO_INCREMENT PRIMARY KEY,
+                    user_email  VARCHAR(150) NOT NULL,
+                    label       VARCHAR(100) NOT NULL,
+                    address     TEXT,
+                    lat         DOUBLE NOT NULL,
+                    lng         DOUBLE NOT NULL,
+                    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
                 )
             """)
 
@@ -672,7 +688,6 @@ def update_password_api():
             return jsonify({"success": True, "message": "Password updated"})
         conn.close(); return jsonify({"success": False, "message": "Incorrect password"}), 401
     except Exception as e: return jsonify({"success": False, "message": str(e)}), 500
-
 @app.route("/check-email", methods=["GET"])
 def check_email():
     email = request.args.get('email')
@@ -684,7 +699,53 @@ def check_email():
         exists = cursor.fetchone() is not None
         conn.close()
         return jsonify({"exists": exists})
-    except: return jsonify({"exists": False})
+    except Exception as e: 
+        print(f"Error checking email: {e}")
+        return jsonify({"exists": False})
+# --- LOCATION MANAGEMENT ---
+
+@app.route("/get-locations", methods=["GET"])
+def get_locations():
+    email = request.args.get('email')
+    try:
+        conn = get_db_connection()
+        if not conn: return jsonify([])
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM user_locations WHERE user_email = %s ORDER BY created_at DESC", (email,))
+        res = cursor.fetchall(); conn.close()
+        return jsonify(res)
+    except: return jsonify([])
+
+@app.route("/add-location", methods=["POST"])
+def add_location():
+    data = request.get_json()
+    email = data.get('email'); label = data.get('label'); address = data.get('address'); lat = data.get('lat'); lng = data.get('lng')
+    try:
+        conn = get_db_connection()
+        if not conn: return jsonify({"success": False, "message": "DB error"}), 500
+        cursor = conn.cursor()
+        
+        # Limit to 5 locations per user
+        cursor.execute("SELECT COUNT(*) FROM user_locations WHERE user_email = %s", (email,))
+        if cursor.fetchone()[0] >= 5:
+            conn.close(); return jsonify({"success": False, "message": "Maximum of 5 saved locations allowed."}), 400
+            
+        cursor.execute("INSERT INTO user_locations (user_email, label, address, lat, lng) VALUES (%s, %s, %s, %s, %s)", (email, label, address, lat, lng))
+        conn.commit(); conn.close()
+        return jsonify({"success": True})
+    except Exception as e: return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route("/delete-location", methods=["POST"])
+def delete_location():
+    data = request.get_json()
+    try:
+        conn = get_db_connection()
+        if not conn: return jsonify({"success": False, "message": "DB error"}), 500
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user_locations WHERE id = %s AND user_email = %s", (data.get('id'), data.get('email')))
+        conn.commit(); conn.close()
+        return jsonify({"success": True})
+    except Exception as e: return jsonify({"success": False, "message": str(e)}), 500
 
 @app.route("/create-account", methods=["POST"])
 def send_otp():
@@ -1361,6 +1422,6 @@ def serve_image(filename):
         
     return "Image not found", 404
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     init_db()
     app.run(debug=True, host="0.0.0.0", port=5000) 
